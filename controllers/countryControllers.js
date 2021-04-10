@@ -10,12 +10,36 @@ countryControllers.oneCountry = async (req, res) => {
         console.log(country);
         const getCountry = await axios.get(`https://travelbriefing.org/${country}?format=json`)
 
-        console.log(getCountry.data);
+        // console.log(getCountry.data);
         res.json(getCountry.data)
 
     }catch (error) {
         res.json('country not availble')
     }
+}
+
+countryControllers.saveCountry = async (req, res) => {
+    try{
+        const savedCountry = await models.country.findOrCreate ({
+            where: {
+                name: req.params.name
+            }
+        })
+        
+        let findUser = await models.userfindOne ({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        const addCountry = await findUser.addCountry(savedCountry[0])
+        res.json({addCountry, findUser, savedCountry})
+
+    }catch (error){
+        console.log(error);
+        res.json({error})
+    }
+
 }
 
 
