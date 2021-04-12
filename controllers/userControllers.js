@@ -36,5 +36,21 @@ userController.userLogin = async (req, res) => {
     }
 }
 
+userController.getAllCountries = async (req, res) => {
+    try {
+        let user = await models.user.findOne ({
+            where: {
+                id: req.params.userId
+            }
+        })
+
+        let countries = await user.getCountries()
+        res.json({countries})
+
+    }catch (error) {
+
+    }
+}
+
 
 module.exports = userController

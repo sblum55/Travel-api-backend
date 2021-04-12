@@ -22,27 +22,29 @@ countryControllers.oneCountry = async (req, res) => {
 
 countryControllers.savedCountry = async (req, res) => {
     try{
-        console.log(req.body, 'line 25');
-        // let vaccinesArr = ''
-        // for(let i = 0; i < req.body.data.vaccinations.length; i++) {
-        //     let name = req.body.data.vaccinations[i].name
-        //     let message = req.body.data.vaccinations[i].message
-        //     // console.log(name, message);
-        //     vaccinesArr += `${name}, ${message}; `
-        // }
-        // console.log('vaccines Array', vaccinesArr);
+        // console.log(req.body, 'line 25');
         const savedCountry = await models.country.findOrCreate ({
             where: {
-                //name = column table name & savedCountry = url param from routes file
                 name: req.body.data.names.name
             },
             defaults: {
                 language: req.body.data.language[0].language,
-                // vaccines: vaccinesArr
                 
             }
         })
-        console.log(savedCountry, 'you got the info');
+
+        //created empty array and looped thru vaccination data to get vaccines and create to table
+        let vaccineArr = []
+        console.log(req.body.data.vaccinations, 'you got the vaccines');
+        for(let i = 0; i < req.body.data.vaccinations.length; i++) {
+            vaccineArr.push (await models.vaccine.create ({
+                    name: req.body.data.vaccinations[i].name,
+                    message: req.body.data.vaccinations[i].message
+
+            }))
+        }
+
+        // console.log(savedCountry, 'you got the info');
         
         let findUser = await models.user.findOne ({
             where: {
@@ -53,7 +55,10 @@ countryControllers.savedCountry = async (req, res) => {
         console.log(findUser);
 
         const addCountry = await findUser.addCountries(savedCountry[0])
-        // res.json({addCountry, findUser, savedCountry})
+        // looped through array again to contact to corresponding country
+        for (let i = 0; i < vaccineArr.length; i++) {
+            savedCountry[0].addVaccine(vaccineArr[i])
+        }
         res.status(200).json('saved to db')
 
     }catch (error){
