@@ -15,7 +15,7 @@ app.use('/countries', countryRouter )
 
 
 
-const PORT = process.env.port || 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`port running on ${PORT}`)
   routesReport.print()
