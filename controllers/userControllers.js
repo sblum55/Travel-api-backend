@@ -44,6 +44,8 @@ userController.getAllCountries = async (req, res) => {
             }
         })
 
+        console.log('line 47 user controllers', user);
+
         let countries = await user.getCountries()
         res.json({countries})
 
