@@ -37,20 +37,25 @@ userController.userLogin = async (req, res) => {
 }
 
 userController.getSavedCountries = async (req, res) => {
-    console.log('line 40 backend', req.params);
     try {
         
         let user = await models.user.findOne ({
             where: {
-                id: req.headers.userId
-
+                id: req.params.userId
             }
         })
 
-        console.log('line 47 user controllers', user);
+        let country = await models.country.findAll ({
+            where: {
+                id: req.body.name
+            }
+        })
+
+        for (let i = 0; i < countries.length; i++) {
+            country[i].getVaccine()
+        }
 
         let countries = await user.getCountries()
-        console.log('all countries', countries);
         res.json({countries})
 
     }catch (error) {

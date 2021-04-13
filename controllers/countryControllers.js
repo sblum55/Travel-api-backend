@@ -10,8 +10,6 @@ countryControllers.oneCountry = async (req, res) => {
         const country = req.params.country
         console.log(country);
         const getCountry = await axios.get(`https://travelbriefing.org/${country}?format=json`)
-
-        // console.log(getCountry.data);
         res.json(getCountry.data)
 
     }catch (error) {
@@ -22,20 +20,19 @@ countryControllers.oneCountry = async (req, res) => {
 
 countryControllers.savedCountry = async (req, res) => {
     try{
-        // console.log(req.body, 'line 25');
         const savedCountry = await models.country.findOrCreate ({
             where: {
                 name: req.body.data.names.name
             },
             defaults: {
                 language: req.body.data.language[0].language,
+                currency: req.body.data.currency.name
                 
             }
         })
 
         //created empty array and looped thru vaccination data to get vaccines and create to table
         let vaccineArr = []
-        console.log(req.body.data.vaccinations, 'you got the vaccines');
         for(let i = 0; i < req.body.data.vaccinations.length; i++) {
             vaccineArr.push (await models.vaccine.create ({
                     name: req.body.data.vaccinations[i].name,
@@ -43,8 +40,6 @@ countryControllers.savedCountry = async (req, res) => {
 
             }))
         }
-
-        // console.log(savedCountry, 'you got the info');
         
         let findUser = await models.user.findOne ({
             where: {
@@ -52,7 +47,6 @@ countryControllers.savedCountry = async (req, res) => {
             
             }
         })
-        console.log(findUser);
 
         const addCountry = await findUser.addCountries(savedCountry[0])
         // looped through array again to contact to corresponding country
