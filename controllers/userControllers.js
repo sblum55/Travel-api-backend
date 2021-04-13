@@ -45,21 +45,29 @@ userController.getSavedCountries = async (req, res) => {
             }
         })
 
-        let country = await models.country.findAll ({
-            where: {
-                id: req.body.name
-            }
-        })
+        // let country = await models.country.findAll ({
+        //     where: {
+        //         id: req.body.names.name
+        //     }
+        // })
 
-        for (let i = 0; i < countries.length; i++) {
-            country[i].getVaccine()
+        let countriesNoVaccines = await user.getCountries()
+
+        let countries = []
+
+
+        for (let i = 0; i < countriesNoVaccines.length; i++) {
+            let countryVaccines = await countriesNoVaccines[i].getVaccines()
+            countries.push({country: countriesNoVaccines[i], vaccines: countryVaccines})
         }
+        console.log(countries);
 
-        let countries = await user.getCountries()
         res.json({countries})
 
+        
+
     }catch (error) {
-        console.log('not pulling saved countries');
+        console.log('not pulling saved countries', error);
     }
 }
 
