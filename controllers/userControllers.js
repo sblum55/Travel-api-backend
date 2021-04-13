@@ -36,21 +36,25 @@ userController.userLogin = async (req, res) => {
     }
 }
 
-userController.getAllCountries = async (req, res) => {
+userController.getSavedCountries = async (req, res) => {
+    console.log('line 40 backend', req.params);
     try {
+        
         let user = await models.user.findOne ({
             where: {
-                id: req.params.userId
+                id: req.headers.userId
+
             }
         })
 
         console.log('line 47 user controllers', user);
 
         let countries = await user.getCountries()
+        console.log('all countries', countries);
         res.json({countries})
 
     }catch (error) {
-
+        console.log('not pulling saved countries');
     }
 }
 

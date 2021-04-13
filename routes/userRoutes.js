@@ -4,6 +4,6 @@ const router = express.Router()
 
 router.post('/', userController.createUser)
 router.post('/login', userController.userLogin)
-router.get('/:userId/savedCounties', userController.getAllCountries)
+router.get('/:userId/savedCounties', userController.getSavedCountries)
 
 module.exports = router
