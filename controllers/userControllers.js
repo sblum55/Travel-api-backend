@@ -45,12 +45,6 @@ userController.getSavedCountries = async (req, res) => {
             }
         })
 
-        // let country = await models.country.findAll ({
-        //     where: {
-        //         id: req.body.names.name
-        //     }
-        // })
-
         let countriesNoVaccines = await user.getCountries()
 
         let countries = []
